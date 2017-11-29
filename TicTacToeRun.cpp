@@ -69,6 +69,8 @@ void run(Game* debugGame) {
 
     while (true) {
         GameState gameState = game.getGameState();
+        bool gameOver = false;
+
         if (gameState != GameState::PLAYING) {
             switch (gameState) {
                 case GameState::O_WIN:
@@ -84,20 +86,26 @@ void run(Game* debugGame) {
                     assert (false);
             }
 
+            gameOver = true;
+        } else {
+            if (game.willDraw(3)) {
+                cout << "Eventually will draw!" << endl;
+                gameOver = true;
+            }
+        }
+
+        if (gameOver) {
+            cout << "Sequence: ";
+            auto sequence = game.getSequence();
+            for (auto each : sequence) {
+                cout << each << " ";
+            }
+            cout << endl;
+
             if (askQuit()) {
                 break;
             } else {
                 game.reset();
-            }
-
-        } else {
-            if (game.willDraw(3)) {
-                cout << "Eventually will draw!" << endl;
-                if (askQuit()) {
-                    break;
-                } else {
-                    game.reset();
-                }
             }
         }
 
@@ -125,6 +133,7 @@ void play(bool userIsX) {
     showSlotIndexes();
 
     while (true) {
+        bool gameOver = false;
         bool userTurn = (game.isXTurn() && userIsX) || (!game.isXTurn() && !userIsX);
 
         GameState gameState = game.getGameState();
@@ -142,15 +151,9 @@ void play(bool userIsX) {
                 default:
                     assert (false);
             }
-
-            if (askQuit()) {
-                break;
-            } else {
-                game.reset();
-            }
+            gameOver = true;
 
         } else {
-            bool gameOver = false;
             if (game.willDraw(3)) {
                 cout << "Eventually will draw!" << endl;
                 gameOver = true;
@@ -163,13 +166,13 @@ void play(bool userIsX) {
                     gameOver = true;
                 }
             }
+        }
 
-            if (gameOver) {
-                if (askQuit()) {
-                    break;
-                } else {
-                    game.reset();
-                }
+        if (gameOver) {
+            if (askQuit()) {
+                break;
+            } else {
+                game.reset();
             }
         }
 

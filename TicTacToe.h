@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <stack>
+#include <list>
 
 namespace tic_tac_toe {
 
@@ -28,6 +29,7 @@ public:
     void reset();
 
     bool willDraw(int limit) const;
+    std::list<int> getSequence() const;
 
 private:
     bool _xTurn;

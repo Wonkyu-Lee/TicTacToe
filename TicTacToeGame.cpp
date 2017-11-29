@@ -82,7 +82,7 @@ bool Game::isXTurn() const {
     return _xTurn;
 }
 
-const std::vector<SlotState>& Game::getSlotStates() const {
+const vector<SlotState>& Game::getSlotStates() const {
     return _slotStates;
 }
 
@@ -121,8 +121,8 @@ GameState Game::getGameState() const {
     }
 }
 
-std::vector<int> Game::getEmptySlots() const {
-    std::vector<int> emptySlots;
+vector<int> Game::getEmptySlots() const {
+    vector<int> emptySlots;
     for (int i = 0; i < SLOT_COUNT; ++i) {
         if (_slotStates[i] == SlotState::EMPTY) {
             emptySlots.push_back(i);
@@ -132,8 +132,8 @@ std::vector<int> Game::getEmptySlots() const {
     return emptySlots;
 }
 
-std::vector<int> Game::getSlotsThatMustBeBlocked() const {
-    std::vector<int> result;
+vector<int> Game::getSlotsThatMustBeBlocked() const {
+    vector<int> result;
     Game game = *this;
     SlotState opposite  = game.isXTurn() ? SlotState::O : SlotState::X;
     GameState oppositeWin = game.isXTurn() ? GameState::O_WIN : GameState::X_WIN;
@@ -161,6 +161,17 @@ void Game::reset() {
 bool Game::willDraw(int limit) const {
     Game game = *this;
     return _willDraw(game, limit);
+}
+
+list<int> Game::getSequence() const {
+    stack<int> stack(_slotStack);
+    list<int> sequence;
+    while (!stack.empty()) {
+        int top = stack.top();
+        stack.pop();
+        sequence.push_front(top);
+    }
+    return sequence;
 }
 
 } // namespace tic_tac_toe
